@@ -1,48 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>String to Characters</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { background-color: #f0f2f5; }
-        .container { max-width: 500px; margin-top: 100px; }
-        #result { margin-top: 20px; font-weight: bold; font-size: 18px; word-break: break-word; }
-    </style>
+  <meta charset="UTF-8">
+  <title>String to Characters</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      min-height: 100vh;
+      background-color: #f9fafb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .app-container {
+      max-width: 500px;
+      width: 100%;
+    }
+    .card {
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border: none;
+    }
+    #result {
+      font-size: 16px;
+      font-weight: 500;
+      word-break: break-word;
+    }
+  </style>
 </head>
 <body>
-    <div class="container card p-4 shadow-sm">
-        <h3 class="text-center mb-4">String to Characters</h3>
-        <div class="mb-3">
-            <input type="text" id="textInput" class="form-control" placeholder="Enter your string">
-        </div>
-        <button onclick="sendString()" class="btn btn-primary w-100">Convert</button>
-        <div id="result" class="alert text-center mt-3" style="display:none;"></div>
+
+  <div class="app-container">
+    <div class="card p-4">
+      <h3 class="text-center mb-3">String → Characters</h3>
+      
+      <div class="mb-3">
+        <label for="textInput" class="form-label fw-bold">INPUT STRING</label>
+        <input type="text" id="textInput" class="form-control" placeholder="Enter your string">
+      </div>
+
+      <div class="d-grid">
+        <button onclick="sendString()" class="btn btn-primary">Convert</button>
+      </div>
+
+      <div id="result" class="alert mt-4 text-center" style="display:none;"></div>
     </div>
 
-    <script>
-        async function sendString() {
-            const text = document.getElementById("textInput").value;
-            const response = await fetch("/chars", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ text })
-            });
-            const data = await response.json();
+    <p class="text-center text-muted mt-3" style="font-size: 14px;">
+      Built with FastAPI & Bootstrap
+    </p>
+  </div>
 
-            const resultDiv = document.getElementById("result");
-            resultDiv.style.display = "block";
+  <script>
+    async function sendString() {
+      const text = document.getElementById("textInput").value;
+      const response = await fetch("/chars", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text })
+      });
+      const data = await response.json();
 
-            if(data.length === 1 && data[0] === "INVALID STRING") {
-                resultDiv.className = "alert alert-danger text-center mt-3";
-                resultDiv.innerText = "INVALID STRING";
-            } else {
-                resultDiv.className = "alert alert-success text-center mt-3";
-                // Format output like ["A","B","C"]
-                const formatted = "[" + data.map(c => `"${c}"`).join(",") + "]";
-                resultDiv.innerText = formatted;
-            }
-        }
-    </script>
+      const resultDiv = document.getElementById("result");
+      resultDiv.style.display = "block";
+
+      if (data.length === 1 && data[0] === "INVALID STRING") {
+        resultDiv.className = "alert alert-danger mt-4 text-center";
+        resultDiv.innerText = "INVALID STRING";
+      } else {
+        resultDiv.className = "alert alert-success mt-4 text-center";
+        const formatted = "[" + data.map(c => `"${c}"`).join(", ") + "]";
+        resultDiv.innerText = formatted;
+      }
+    }
+  </script>
 </body>
 </html>
