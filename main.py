@@ -16,9 +16,10 @@ def string_to_chars(payload: TextIn) -> List[str]:
         return ["INVALID STRING"]
     return list(s)
 
-# Serve frontend
+
 app.mount("/static", StaticFiles(directory="."), name="static")
 
 @app.get("/")
 def home():
     return FileResponse("index.html")
+
